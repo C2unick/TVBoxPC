@@ -1,14 +1,15 @@
+import subprocess
+
 import requests
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QFont, QImage
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QWidget, QDialog, QLabel, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, \
     QTableWidget, QHeaderView, QAbstractItemView
 
-import mpv_caller
-
+PotPlayer_path = 'D:\Program Files\DAUM\PotPlayer\PotPlayerMini64.exe'
 
 def secureget(dic='', key=''):
-    if dic==None:
+    if dic == None:
         return False
     if key in dic:
         return dic[key]
@@ -59,7 +60,7 @@ class MoiveDetial(QDialog):
 
         self.textEdit = QTextEdit()
         for k, v in self.vod_content.items():
-            if v and k not in [ 'vod_pic', 'vod_id','vod_play_from','vod_play_url']:
+            if v and k not in ['vod_pic', 'vod_id', 'vod_play_from', 'vod_play_url']:
                 self.textEdit.append("%s:%s" % (k, v))
         self.topwidget = QWidget(self)
         self.topwidget.setObjectName("GWid")
@@ -106,25 +107,26 @@ class MoiveDetial(QDialog):
 
     def playvod(self, url):
         playcontent = self.spider.playerContent("", url, {})
-        # print(playcontent)
-        player = mpv_caller.MPV(player_operation_mode='pseudo-gui',
-                                script_opts='osc-layout=box,osc-seekbarstyle=bar,osc-deadzonesize=0,osc-minmousemove=3',
-                                input_default_bindings=True,
-                                input_vo_keyboard=True,
-                                osc=True)
-        playurl = secureget(playcontent,'url')
+        # player = mpv_caller.MPV(player_operation_mode='pseudo-gui',
+        #                         script_opts='osc-layout=box,osc-seekbarstyle=bar,osc-deadzonesize=0,osc-minmousemove=3',
+        #                         input_default_bindings=True,
+        #                         input_vo_keyboard=True,
+        #                         osc=True)
+        playurl = secureget(playcontent, 'url')
         if not playurl:
             return
-        playheader = secureget(playcontent,'header')
+        playheader = secureget(playcontent, 'header')
         if playheader:
-            playua = secureget(playheader,'User-Agent')
-            if playua:
-                player.set_option_string("user-agent", playua)
+            playua = secureget(playheader, 'User-Agent')
+            if not playua:
+                playua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.46'
             playref = secureget(playheader, 'Referer')
             if playref:
-                player.set_option_string("referrer", playref)
-        player.play(playurl)
-        # player.wait_for_shutdown()
+                subprocess.Popen([PotPlayer_path, playurl, '/user_agent=' + playua, '/referer=' + playref])
+            else:
+                subprocess.Popen([PotPlayer_path, playurl, '/user_agent=' + playua])
+        else:
+            subprocess.Popen([PotPlayer_path, playurl])
 
     def VLayout(self):
         self.vbox = QVBoxLayout(self)
