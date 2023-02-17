@@ -9,7 +9,7 @@ https://github.com/CatVodTVOfficial/TVBoxOSC
 + clone the repo.
 + install the python packages : pip install -r ./requirements.txt  
 + install the latest PotPlayer and set the path in page_detial.py line 9
-  such as follow:
+  such as follow:  
   `PotPlayer_path = 'D:\Program Files\DAUM\PotPlayer\PotPlayerMini64.exe'`
 + run main.py and select a py spider.
 
@@ -19,4 +19,5 @@ https://github.com/CatVodTVOfficial/TVBoxOSC
  + search
  + multithread
  + online config
+ + support jar json xml and js spider
 ![Image text](shot.png)
