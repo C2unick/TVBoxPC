@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QWidget, QDialog, QLabel, QVBoxLayout, QHBoxLayout, 
 
 PotPlayer_path = 'D:\Program Files\DAUM\PotPlayer\PotPlayerMini64.exe'
 
+
 def secureget(dic='', key=''):
     if dic == None:
         return False
@@ -103,7 +104,7 @@ class MoiveDetial(QDialog):
             self.formApage.setFixedHeight(30)
             self.formApage.setText(ep_name)
             self.table.setCellWidget(n / self.columnCount, n % self.columnCount, self.formApage)  # 设置标签在框架的位置
-            self.formApage.clicked.connect(lambda: self.playvod(ep_url))
+            self.formApage.clicked.connect(lambda checked, arg=ep_url: self.playvod(arg))
 
     def playvod(self, url):
         playcontent = self.spider.playerContent("", url, {})
